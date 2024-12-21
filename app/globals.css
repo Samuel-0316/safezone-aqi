@@ -11,3 +11,22 @@ body {
     --radius: 0.5rem;
   }
 }
+
+/*INFO: remove .leaflet-layer if the map tiles from geoapify are being used*/
+.leaflet-layer,
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out,
+.leaflet-control-attribution {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%) !important;
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: black !important;
+  color: white !important;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.4) !important;
+}
+
+.leaflet-container {
+  background: #0000 !important;
+}
