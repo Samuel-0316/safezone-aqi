@@ -1,5 +1,5 @@
 import { getAirQuality } from "@/lib/meersens_api/AIRQuality";
-import { fetchOSMCoordinates } from "@/lib/osm/coordinates";
+import { fetchOSMCoordinates } from "@/lib/osm/Coordinates";
 import Map from "@/components/Map";
 
 export const dynamic = "force-dynamic";

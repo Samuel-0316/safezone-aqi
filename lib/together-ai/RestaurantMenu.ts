@@ -2,7 +2,7 @@ import Together from "together-ai";
 import { ChatCompletion } from "together-ai/src/resources/chat/index.js";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
-import { MenuItem } from "./Types";
+import { MenuItem } from "./RestaurantTypes";
 
 const ItemFormat = z.object({
   name: z.string().describe("name of an indian dish"),

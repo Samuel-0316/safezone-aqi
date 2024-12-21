@@ -4,6 +4,7 @@ export type AirQualityResponse = {
   index: {
     index_type: string;
     index_name: string;
+    description: string;
     qualification: string;
     icon: string | null;
     color: string;
