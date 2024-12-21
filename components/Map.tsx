@@ -1,4 +1,5 @@
 "use client";
+
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import icon from "leaflet/dist/images/marker-icon.png";
@@ -72,42 +73,46 @@ const MapComponent = ({
   };
 
   return (
-    <div className="relative h-[600px] w-[800px] rounded-lg shadow-lg">
+    <div className="relative h-[300px] w-[400px] rounded-lg shadow-lg sm:h-[400px] sm:w-[700px] md:h-[500px] md:w-[800px] lg:h-[600px] lg:w-[900px]">
       <MapContainer
         center={[lat, lon]}
         zoom={13}
         style={{ height: "100%", width: "100%", zIndex: 0 }}
       >
-        {/*TODO: change this to geoapify later */}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <Marker position={[lat, lon]}>
           <Popup>
-            <div>
+            <div className="text-sm sm:text-base">
               <h2 className="mb-2 font-bold">{name}</h2>
               <div
                 className={`inline-block rounded-full px-2 py-1 text-white ${getAQIColor(aqi.index.value)}`}
               >
                 AQI: {aqi.index.value}
               </div>
-              <p className="mt-2">{aqi.index.description}</p>
+              <p className="mt-2 text-xs sm:text-sm">{aqi.index.description}</p>
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button className="mt-4">View Details</Button>
+                  <Button className="mt-4 text-xs sm:text-sm">
+                    View Details
+                  </Button>
                 </DialogTrigger>
-                <DialogContent className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform bg-black text-white">
+                <DialogContent className="w-11/12 max-w-lg bg-white text-black dark:bg-gray-800 dark:text-white sm:w-full">
                   <DialogHeader>
-                    <DialogTitle>Air Quality Details for {name}</DialogTitle>
-                    <DialogDescription className="hidden">
-                      {" "}
-                      {aqi.index.description}{" "}
+                    <DialogTitle className="text-lg sm:text-xl">
+                      Air Quality Details for {name}
+                    </DialogTitle>
+                    <DialogDescription className="text-sm sm:text-base">
+                      {aqi.index.description}
                     </DialogDescription>
                   </DialogHeader>
                   <div className="mt-4">
-                    <h3 className="mb-2 text-lg font-semibold">Pollutants:</h3>
-                    <ul>
+                    <h3 className="mb-2 text-base font-semibold sm:text-lg">
+                      Pollutants:
+                    </h3>
+                    <ul className="text-sm sm:text-base">
                       {Object.entries(aqi?.pollutants).map(
                         ([key, pollutant]) => (
                           <li key={key} className="mb-2">
