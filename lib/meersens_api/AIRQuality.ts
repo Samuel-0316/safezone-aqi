@@ -4,7 +4,7 @@ export const getAirQuality = async (
   latitude: number,
   longitude: number,
 ): Promise<AirQualityResponse> => {
-  if (!process.env.MEERSEENS_API_KEY) {
+  if (!process.env.MEERSENS_API_KEY) {
     throw new Error("MEERSEENS_API_KEY is not set");
   }
   const response = await fetch(

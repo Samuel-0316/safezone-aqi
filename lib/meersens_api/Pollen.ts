@@ -5,7 +5,7 @@ export const getPollenResponse = async (
   longitude: number,
 ): Promise<PollenQualityResponse> => {
   if (!process.env.MEERSEENS_API_KEY) {
-    throw new Error("MEERSEENS_API_KEY is not set");
+    throw new Error("MEERSENS_API_KEY is not set");
   }
   const response = await fetch(
     `https://api.meersens.com/environment/public/pollen/current?lat=${latitude}&lng=${longitude}&apikey=${process.env.MEERSEENS_API_KEY}`,
