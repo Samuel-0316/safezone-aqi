@@ -1,6 +1,6 @@
 export type PollenQualityResponse = {
   found: boolean;
-  datetime: string; // ISO date string
+  datetime: string;
   index: {
     index_type: string;
     index_name: string;
