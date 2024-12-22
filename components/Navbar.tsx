@@ -15,13 +15,13 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="bg-background/95 supports-[backdrop-filter]:bg-background/60 absolute top-0 z-10 w-full backdrop-blur">
+    <nav className="bg-background/95 supports-[backdrop-filter]:bg-background/60 absolute top-0 z-10 w-full px-2 backdrop-blur">
       <div className="container mx-auto">
         <div className="flex h-16 items-center justify-between md:justify-around">
           <div className="mb-2 flex w-full flex-grow justify-start md:mb-0 md:w-auto md:justify-start">
             <Link
               href="/"
-              className="text-primary text-backgroundlight font-bold dark:text-green-600"
+              className="text-primary font-bold text-backgroundlight dark:text-green-600"
               style={{
                 fontSize: "clamp(1.25rem, 2vw, 2rem)",
               }}

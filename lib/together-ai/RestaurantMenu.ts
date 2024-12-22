@@ -1,3 +1,4 @@
+"use server";
 import Together from "together-ai";
 import { ChatCompletion } from "together-ai/src/resources/chat/index.js";
 import { z } from "zod";
@@ -41,6 +42,7 @@ export const generateMenu = async (
   throw new Error("no response from chat completion");
 };
 
-export const getMenu = (response: ChatCompletion): MenuItem[] => {
+export const getMenu = async (response: ChatCompletion): MenuItem[] => {
+  console.log(response.choices[0].message?.content);
   return response.choices[0].message?.content as unknown as MenuItem[];
 };

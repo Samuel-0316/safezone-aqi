@@ -19,6 +19,9 @@ import { PollenQualityResponse } from "@/lib/meersens_api/PollenTypes";
 import { WaterQualityResponse } from "@/lib/meersens_api/WaterQualityTypes";
 import { getPollenResponse } from "@/lib/meersens_api/Pollen";
 import { getWaterQuality } from "@/lib/meersens_api/WaterQuality";
+// import { generateMenu, getMenu } from "@/lib/together-ai/RestaurantMenu";
+// import { generateAllergens } from "@/lib/together-ai/FoodAllergens";
+// import { MenuItem } from "@/lib/together-ai/RestaurantTypes";
 
 const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
   ssr: false,
@@ -41,6 +44,8 @@ const PopupComponent: React.FC<PopupComponentProps> = ({ location }) => {
   const [aqi, setAqi] = useState<AirQualityResponse | null>(null);
   const [pollen, setPollen] = useState<PollenQualityResponse | null>(null);
   const [water, setWater] = useState<WaterQualityResponse | null>(null);
+  // const [menu, setMenu] = useState<MenuItem[] | null>(null);
+  // const [allergies, setAllergies] = useState<{ [key: string]: string[] }>({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -50,6 +55,7 @@ const PopupComponent: React.FC<PopupComponentProps> = ({ location }) => {
     try {
       setIsLoading(true);
       setError(null);
+      // const isRestaurant = location?.category?.join(",").includes("food");
       const [aqiData, pollenData, waterData] = await Promise.all([
         getAirQuality(location.lat, location.lon),
         getPollenResponse(location.lat, location.lon),
@@ -59,20 +65,41 @@ const PopupComponent: React.FC<PopupComponentProps> = ({ location }) => {
       setAqi(aqiData);
       setPollen(pollenData);
       setWater(waterData);
+
+      // if (isRestaurant) {
+      //   const menuResponse = await generateMenu(
+      //     location.country as string,
+      //     location.state as string,
+      //   );
+      //   const menuItems = await getMenu(menuResponse);
+      //   setMenu(menuItems);
+
+      //   const allergyPromises = menuItems.map(async (item) => {
+      //     const allergens = await generateAllergens(item.name);
+      //     return { [item.name]: allergens };
+      //   });
+
+      //   const allergyResults = await Promise.all(allergyPromises);
+      //   const allergyMap = allergyResults.reduce(
+      //     (acc, curr) => ({ ...acc, ...curr }),
+      //     {},
+      //   );
+      //   setAllergies(allergyMap);
+      // }
     } catch (error) {
       console.error("Failed to fetch data:", error);
-      setError("Failed to load environmental data. Please try again later.");
+      setError("Failed to load data. Please try again later.");
     } finally {
       setIsLoading(false);
     }
-  }, [location.lat, location.lon, isLoading, aqi]);
+  }, [location.lat, location.lon, aqi, isLoading]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
   if (isLoading) {
-    return <Popup>Loading environmental data...</Popup>;
+    return <Popup>Loading data...</Popup>;
   }
 
   if (error) {
@@ -87,6 +114,7 @@ const PopupComponent: React.FC<PopupComponentProps> = ({ location }) => {
     { id: "air", label: "Air Quality", available: true },
     { id: "pollen", label: "Pollen", available: pollen?.found },
     { id: "water", label: "Water Quality", available: water?.found },
+    // { id: "menu", label: "Menu & Allergies", available: !!menu },
   ].filter((tab) => tab.available);
 
   return (
@@ -106,10 +134,10 @@ const PopupComponent: React.FC<PopupComponentProps> = ({ location }) => {
           <DialogContent className="w-11/12 max-w-4xl bg-white text-black dark:bg-gray-800 dark:text-white sm:w-full">
             <DialogHeader>
               <DialogTitle className="text-lg sm:text-xl">
-                Environmental Details for {location.display_name}
+                Details for {location.display_name}
               </DialogTitle>
               <DialogDescription className="text-sm sm:text-base">
-                Available Environmental Information
+                Environmental Information
               </DialogDescription>
             </DialogHeader>
             <Tabs defaultValue="air" className="mt-4">
@@ -189,6 +217,27 @@ const PopupComponent: React.FC<PopupComponentProps> = ({ location }) => {
                   </ul>
                 </TabsContent>
               )}
+              {/* {menu && (
+                <TabsContent value="menu">
+                  <h3 className="mb-2 text-base font-semibold sm:text-lg">
+                    Menu and Allergies
+                  </h3>
+                  <ul className="text-sm">
+                    {menu.map((item, index) => (
+                      <li key={index} className="mb-4">
+                        <span className="font-medium">{item.name}</span> - $
+                        {item.price.toFixed(2)}
+                        <br />
+                        <span className="text-xs">
+                          Possible allergens:{" "}
+                          {allergies[item.name]?.join(", ") ||
+                            "None identified"}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </TabsContent>
+              )} */}
             </Tabs>
           </DialogContent>
         </Dialog>

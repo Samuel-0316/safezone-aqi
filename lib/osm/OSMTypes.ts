@@ -33,4 +33,7 @@ export type Location = {
   lat: number;
   lon: number;
   display_name: string;
+  country?: string;
+  state?: string;
+  category?: string[];
 };
