@@ -55,7 +55,7 @@ const MapComponent = ({
   }
 
   return (
-    <div className="relative h-[300px] w-[400px] rounded-lg shadow-lg sm:h-[400px] sm:w-[700px] md:h-[500px] md:w-[800px] lg:h-[600px] lg:w-[900px]">
+    <div className="relative h-[500px] w-[400px] rounded-lg shadow-lg sm:h-[400px] sm:w-[700px] md:h-[500px] md:w-[800px] lg:h-[600px] lg:w-[900px]">
       <MapContainer
         center={[currentLocation.lat, currentLocation.lon]}
         zoom={16}
