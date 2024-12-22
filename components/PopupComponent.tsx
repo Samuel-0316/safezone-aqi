@@ -19,9 +19,6 @@ import { PollenQualityResponse } from "@/lib/meersens_api/PollenTypes";
 import { WaterQualityResponse } from "@/lib/meersens_api/WaterQualityTypes";
 import { getPollenResponse } from "@/lib/meersens_api/Pollen";
 import { getWaterQuality } from "@/lib/meersens_api/WaterQuality";
-// import { generateMenu, getMenu } from "@/lib/together-ai/RestaurantMenu";
-// import { generateAllergens } from "@/lib/together-ai/FoodAllergens";
-// import { MenuItem } from "@/lib/together-ai/RestaurantTypes";
 
 const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
   ssr: false,
@@ -36,6 +33,122 @@ const getAQIColor = (value: number): string => {
   return "bg-red-900";
 };
 
+function getRandomMenu() {
+  const menus = [
+    {
+      menu: [
+        {
+          name: "Grilled Chicken Salad",
+          ingredients: [
+            "Grilled Chicken",
+            "Lettuce",
+            "Tomatoes",
+            "Cucumbers",
+            "Ranch Dressing",
+          ],
+          possible_allergens: ["Dairy"],
+          price: 12.99,
+        },
+        {
+          name: "Seafood Paella",
+          ingredients: [
+            "Rice",
+            "Shrimp",
+            "Mussels",
+            "Clams",
+            "Saffron",
+            "Paprika",
+          ],
+          possible_allergens: ["Shellfish"],
+          price: 18.5,
+        },
+        {
+          name: "Vegetable Stir-Fry",
+          ingredients: [
+            "Broccoli",
+            "Carrots",
+            "Bell Peppers",
+            "Soy Sauce",
+            "Garlic",
+          ],
+          possible_allergens: ["Soy"],
+          price: 10.75,
+        },
+      ],
+    },
+    {
+      menu: [
+        {
+          name: "Classic Margherita Pizza",
+          ingredients: [
+            "Pizza Dough",
+            "Tomato Sauce",
+            "Mozzarella Cheese",
+            "Basil",
+          ],
+          possible_allergens: ["Gluten", "Dairy"],
+          price: 14.99,
+        },
+        {
+          name: "Chocolate Lava Cake",
+          ingredients: ["Flour", "Butter", "Sugar", "Cocoa Powder", "Eggs"],
+          possible_allergens: ["Gluten", "Dairy", "Eggs"],
+          price: 7.99,
+        },
+        {
+          name: "Mango Smoothie",
+          ingredients: ["Mango", "Milk", "Honey"],
+          possible_allergens: ["Dairy"],
+          price: 5.5,
+        },
+      ],
+    },
+    {
+      menu: [
+        {
+          name: "Vegan Buddha Bowl",
+          ingredients: [
+            "Quinoa",
+            "Chickpeas",
+            "Avocado",
+            "Spinach",
+            "Tahini Sauce",
+          ],
+          possible_allergens: ["Sesame"],
+          price: 11.25,
+        },
+        {
+          name: "Beef Tacos",
+          ingredients: [
+            "Ground Beef",
+            "Taco Shells",
+            "Cheddar Cheese",
+            "Lettuce",
+            "Salsa",
+          ],
+          possible_allergens: ["Gluten", "Dairy"],
+          price: 9.99,
+        },
+        {
+          name: "Caesar Salad",
+          ingredients: [
+            "Romaine Lettuce",
+            "Croutons",
+            "Parmesan Cheese",
+            "Caesar Dressing",
+          ],
+          possible_allergens: ["Dairy", "Gluten", "Fish"],
+          price: 8.75,
+        },
+      ],
+    },
+  ];
+
+  // Randomly select a menu
+  const selectedMenu = menus[Math.floor(Math.random() * menus.length)];
+  return selectedMenu;
+}
+
 interface PopupComponentProps {
   location: Location;
 }
@@ -44,10 +157,9 @@ const PopupComponent: React.FC<PopupComponentProps> = ({ location }) => {
   const [aqi, setAqi] = useState<AirQualityResponse | null>(null);
   const [pollen, setPollen] = useState<PollenQualityResponse | null>(null);
   const [water, setWater] = useState<WaterQualityResponse | null>(null);
-  // const [menu, setMenu] = useState<MenuItem[] | null>(null);
-  // const [allergies, setAllergies] = useState<{ [key: string]: string[] }>({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [menu, setMenu] = useState(getRandomMenu());
 
   const fetchData = useCallback(async () => {
     if (isLoading || aqi) return;
@@ -55,7 +167,6 @@ const PopupComponent: React.FC<PopupComponentProps> = ({ location }) => {
     try {
       setIsLoading(true);
       setError(null);
-      // const isRestaurant = location?.category?.join(",").includes("food");
       const [aqiData, pollenData, waterData] = await Promise.all([
         getAirQuality(location.lat, location.lon),
         getPollenResponse(location.lat, location.lon),
@@ -65,27 +176,6 @@ const PopupComponent: React.FC<PopupComponentProps> = ({ location }) => {
       setAqi(aqiData);
       setPollen(pollenData);
       setWater(waterData);
-
-      // if (isRestaurant) {
-      //   const menuResponse = await generateMenu(
-      //     location.country as string,
-      //     location.state as string,
-      //   );
-      //   const menuItems = await getMenu(menuResponse);
-      //   setMenu(menuItems);
-
-      //   const allergyPromises = menuItems.map(async (item) => {
-      //     const allergens = await generateAllergens(item.name);
-      //     return { [item.name]: allergens };
-      //   });
-
-      //   const allergyResults = await Promise.all(allergyPromises);
-      //   const allergyMap = allergyResults.reduce(
-      //     (acc, curr) => ({ ...acc, ...curr }),
-      //     {},
-      //   );
-      //   setAllergies(allergyMap);
-      // }
     } catch (error) {
       console.error("Failed to fetch data:", error);
       setError("Failed to load data. Please try again later.");
@@ -114,7 +204,7 @@ const PopupComponent: React.FC<PopupComponentProps> = ({ location }) => {
     { id: "air", label: "Air Quality", available: true },
     { id: "pollen", label: "Pollen", available: pollen?.found },
     { id: "water", label: "Water Quality", available: water?.found },
-    // { id: "menu", label: "Menu & Allergies", available: !!menu },
+    { id: "menu", label: "Menu & Allergies", available: true },
   ].filter((tab) => tab.available);
 
   return (
@@ -217,27 +307,25 @@ const PopupComponent: React.FC<PopupComponentProps> = ({ location }) => {
                   </ul>
                 </TabsContent>
               )}
-              {/* {menu && (
-                <TabsContent value="menu">
-                  <h3 className="mb-2 text-base font-semibold sm:text-lg">
-                    Menu and Allergies
-                  </h3>
-                  <ul className="text-sm">
-                    {menu.map((item, index) => (
-                      <li key={index} className="mb-4">
-                        <span className="font-medium">{item.name}</span> - $
-                        {item.price.toFixed(2)}
-                        <br />
-                        <span className="text-xs">
-                          Possible allergens:{" "}
-                          {allergies[item.name]?.join(", ") ||
-                            "None identified"}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </TabsContent>
-              )} */}
+              <TabsContent value="menu">
+                <h3 className="mb-2 text-base font-semibold sm:text-lg">
+                  Menu and Allergies
+                </h3>
+                <ul className="text-sm">
+                  {menu?.menu.map((item, index) => (
+                    <li key={index} className="mb-4">
+                      <span className="font-medium">{item.name}</span> - $
+                      {item.price.toFixed(2)}
+                      <br />
+                      <span className="text-xs">
+                        Possible allergens:{" "}
+                        {item.possible_allergens?.join(", ") ||
+                          "None identified"}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </TabsContent>
             </Tabs>
           </DialogContent>
         </Dialog>
