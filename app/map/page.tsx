@@ -35,14 +35,14 @@ async function MapContent({ searchQuery }: { searchQuery: string }) {
   }
 }
 
-export default function MapPage({
-  searchParams,
-}: {
-  searchParams: { search_query?: string };
-}) {
-  const search_query = searchParams.search_query;
+interface MapPageProps {
+  searchParams: { [key: string]: string | string[] | undefined };
+}
 
-  if (!search_query) {
+export default function MapPage({ searchParams }: MapPageProps) {
+  const search_query = searchParams.search_query as string | undefined;
+
+  if (!search_query || search_query.trim() === "") {
     return (
       <div className="flex h-screen items-center justify-center bg-black text-red-500">
         <p>No location provided</p>
