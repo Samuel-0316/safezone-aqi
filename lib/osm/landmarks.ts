@@ -13,13 +13,22 @@ export const getLandMarks = async (
   return data;
 };
 
-export const getLandMarkProximityArray = async (
+type LandMark = {
+  name: string;
+  latitude: number;
+  longitude: number;
+};
+
+export const getLandMarkProximityArray = (
   featurescollection: FeatureCollection,
 ) => {
-  const proximityArray: number[][] = [];
+  const proximityArray: LandMark[] = [];
   for (const feature of featurescollection.features) {
-    const latlong = feature.geometry.coordinates;
-    proximityArray.push(latlong);
+    proximityArray.push({
+      name: feature.properties.name,
+      latitude: feature.geometry.coordinates[1],
+      longitude: feature.geometry.coordinates[0],
+    });
   }
   return proximityArray;
 };
