@@ -33,7 +33,7 @@ const LocationInput = () => {
       <Button
         type="submit"
         size="icon"
-        className="bg-backgroundlight absolute right-1 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-white shadow-md transition-colors duration-200 hover:bg-green-700 focus:ring-2 focus:ring-green-500/20 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-400/20"
+        className="absolute right-1 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-backgroundlight text-white shadow-md transition-colors duration-200 hover:bg-green-700 focus:ring-2 focus:ring-green-500/20 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-400/20"
       >
         <Search className="h-4 w-4" />
         <span className="sr-only">Search</span>

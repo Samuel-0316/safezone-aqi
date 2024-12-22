@@ -1,3 +1,4 @@
+"use server";
 import { AirQualityResponse } from "./AIRQualityTypes";
 
 export const getAirQuality = async (
@@ -5,7 +6,7 @@ export const getAirQuality = async (
   longitude: number,
 ): Promise<AirQualityResponse> => {
   if (!process.env.MEERSENS_API_KEY) {
-    throw new Error("MEERSEENS_API_KEY is not set");
+    throw new Error("MEERSENS_API_KEY is not set");
   }
   const response = await fetch(
     `https://api.meersens.com/environment/public/air/current?lat=${latitude}&lng=${longitude}&apikey=${process.env.MEERSENS_API_KEY}`,

@@ -1,10 +1,11 @@
+"use server";
 import { PollenQualityResponse } from "./PollenTypes";
 
 export const getPollenResponse = async (
   latitude: number,
   longitude: number,
 ): Promise<PollenQualityResponse> => {
-  if (!process.env.MEERSEENS_API_KEY) {
+  if (!process.env.MEERSENS_API_KEY) {
     throw new Error("MEERSENS_API_KEY is not set");
   }
   const response = await fetch(

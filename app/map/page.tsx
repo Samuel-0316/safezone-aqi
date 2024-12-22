@@ -1,33 +1,29 @@
-import { getAirQuality } from "@/lib/meersens_api/AIRQuality";
 import { fetchOSMCoordinates } from "@/lib/osm/Coordinates";
 import Map from "@/components/Map";
+import { getLandMarkProximityArray, getLandMarks } from "@/lib/osm/landmarks";
+import { Suspense } from "react";
 
 export const dynamic = "force-dynamic";
 
-export default async function MapPage({
-  searchParams,
-}: {
-  searchParams: { location: string };
-}) {
-  const { location } = await searchParams;
-
-  if (!location) {
-    //TODO: Handle this better
-    alert("No location provided");
-    return;
-  }
-
+async function MapContent({ searchQuery }: { searchQuery: string }) {
   try {
-    const osmData = await fetchOSMCoordinates(location);
-    const [lon, lat] = osmData.features[0].geometry.coordinates;
-    const name = osmData.features[0].properties.display_name;
-
-    const aqi = await getAirQuality(lat, lon);
+    const currentLocation = await fetchOSMCoordinates(searchQuery);
+    const landmarkResponse = await getLandMarks(
+      currentLocation.lat,
+      currentLocation.lon,
+      [
+        "commercial",
+        "education",
+        "accommodation",
+        "entertainment",
+        "healthcare",
+      ],
+      5000,
+    );
+    const landmarkArray = getLandMarkProximityArray(landmarkResponse);
 
     return (
-      <div className="flex h-screen flex-col items-center justify-center bg-gray-300 dark:bg-black">
-        <Map lat={lat} lon={lon} name={name} aqi={aqi} />
-      </div>
+      <Map currentLocation={currentLocation} landmarkArray={landmarkArray} />
     );
   } catch (error) {
     console.error(error);
@@ -37,4 +33,28 @@ export default async function MapPage({
       </div>
     );
   }
+}
+
+export default function MapPage({
+  searchParams,
+}: {
+  searchParams: { search_query: string };
+}) {
+  const { search_query } = searchParams;
+
+  if (!search_query) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-black text-red-500">
+        <p>No location provided</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex h-screen flex-col items-center justify-center bg-gray-300 dark:bg-black">
+      <Suspense fallback={<div>Loading map...</div>}>
+        <MapContent searchQuery={search_query} />
+      </Suspense>
+    </div>
+  );
 }
