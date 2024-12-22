@@ -21,7 +21,7 @@ const Navbar = () => {
           <div className="mb-2 flex w-full flex-grow justify-start md:mb-0 md:w-auto md:justify-start">
             <Link
               href="/"
-              className="text-primary font-bold text-green-600"
+              className="text-primary text-backgroundlight font-bold dark:text-green-600"
               style={{
                 fontSize: "clamp(1.25rem, 2vw, 2rem)",
               }}

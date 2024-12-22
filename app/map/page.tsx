@@ -25,7 +25,7 @@ export default async function MapPage({
     const aqi = await getAirQuality(lat, lon);
 
     return (
-      <div className="flex h-screen flex-col items-center justify-center bg-black">
+      <div className="flex h-screen flex-col items-center justify-center bg-gray-300 dark:bg-black">
         <Map lat={lat} lon={lon} name={name} aqi={aqi} />
       </div>
     );
