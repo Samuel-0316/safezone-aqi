@@ -35,12 +35,12 @@ async function MapContent({ searchQuery }: { searchQuery: string }) {
   }
 }
 
-export default async function MapPage({
+export default function MapPage({
   searchParams,
 }: {
-  searchParams: { search_query: string };
+  searchParams: { search_query?: string };
 }) {
-  const { search_query } = await searchParams;
+  const search_query = searchParams.search_query;
 
   if (!search_query) {
     return (
