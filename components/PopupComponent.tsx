@@ -159,7 +159,7 @@ const PopupComponent: React.FC<PopupComponentProps> = ({ location }) => {
   const [water, setWater] = useState<WaterQualityResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [menu, setMenu] = useState(getRandomMenu());
+  const menu = getRandomMenu();
 
   const fetchData = useCallback(async () => {
     if (isLoading || aqi) return;
