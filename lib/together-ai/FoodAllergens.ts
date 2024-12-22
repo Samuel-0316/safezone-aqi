@@ -1,3 +1,4 @@
+"use server";
 import Together from "together-ai";
 import { ChatCompletion } from "together-ai/src/resources/chat/index.js";
 import { z } from "zod";
@@ -25,9 +26,21 @@ const jsonSchema = zodToJsonSchema(ResponseFormat, {
 
 const together = new Together({ apiKey: process.env.TOGETHERAI_API_KEY });
 
-export const generateMenu = async (
+const getAllergens = (response: ChatCompletion): string[] => {
+  const allergensArray: string[] = [];
+  if (response?.choices?.[0]?.message?.content) {
+    const output = JSON.parse(response?.choices?.[0]?.message?.content);
+    allergensArray.push(
+      ...output.result.map((item: Allergen) => item.allergen),
+    );
+    return output;
+  }
+  return allergensArray;
+};
+
+export const generateAllergens = async (
   foodName: string,
-): Promise<ChatCompletion> => {
+): Promise<string[]> => {
   const prompt = `list the name of the possible allergen that could be there in the given food like ${foodName}, i want scientific name of allergen only like gluten etc, don't just give me the name of the food back`;
   const response: ChatCompletion = await together.chat.completions.create({
     messages: [
@@ -40,19 +53,7 @@ export const generateMenu = async (
   if (response?.choices?.[0]?.message?.content) {
     const output = JSON.parse(response?.choices?.[0]?.message?.content);
     console.log(output);
-    return output;
+    return getAllergens(output);
   }
   throw new Error("no response from chat completion");
-};
-
-export const getAllergens = (response: ChatCompletion): string[] => {
-  const allergensArray: string[] = [];
-  if (response?.choices?.[0]?.message?.content) {
-    const output = JSON.parse(response?.choices?.[0]?.message?.content);
-    allergensArray.push(
-      ...output.result.map((item: Allergen) => item.allergen),
-    );
-    return output;
-  }
-  return allergensArray;
 };

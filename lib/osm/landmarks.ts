@@ -23,7 +23,10 @@ export const getLandMarkProximityArray = (
     const location: Location = {
       lat: latlong[1],
       lon: latlong[0],
-      display_name: feature.properties.name,
+      display_name: feature.properties.name || "",
+      country: feature.properties.country,
+      state: feature.properties.state,
+      category: feature.properties.categories,
     };
     proximityArray.push(location);
   }
