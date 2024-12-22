@@ -36,11 +36,11 @@ async function MapContent({ searchQuery }: { searchQuery: string }) {
 }
 
 interface MapPageProps {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ search_query: string }>;
 }
 
-export default function MapPage({ searchParams }: MapPageProps) {
-  const search_query = searchParams.search_query as string | undefined;
+export default async function MapPage({ searchParams }: MapPageProps) {
+  const { search_query } = await searchParams;
 
   if (!search_query || search_query.trim() === "") {
     return (
