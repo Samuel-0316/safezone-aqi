@@ -1,24 +1,13 @@
 import { fetchOSMCoordinates } from "@/lib/osm/Coordinates";
 import Map from "@/components/Map";
 import { getLandMarkProximityArray, getLandMarks } from "@/lib/osm/landmarks";
+import { Suspense } from "react";
 
 export const dynamic = "force-dynamic";
 
-export default async function MapPage({
-  searchParams,
-}: {
-  searchParams: { search_query: string };
-}) {
-  const { search_query } = await searchParams;
-
-  if (!search_query) {
-    //TODO: Handle this better
-    alert("No location provided");
-    return;
-  }
-
+async function MapContent({ searchQuery }: { searchQuery: string }) {
   try {
-    const currentLocation = await fetchOSMCoordinates(search_query);
+    const currentLocation = await fetchOSMCoordinates(searchQuery);
     const landmarkResponse = await getLandMarks(
       currentLocation.lat,
       currentLocation.lon,
@@ -34,9 +23,7 @@ export default async function MapPage({
     const landmarkArray = getLandMarkProximityArray(landmarkResponse);
 
     return (
-      <div className="flex h-screen flex-col items-center justify-center bg-gray-300 dark:bg-black">
-        <Map currentLocation={currentLocation} landmarkArray={landmarkArray} />
-      </div>
+      <Map currentLocation={currentLocation} landmarkArray={landmarkArray} />
     );
   } catch (error) {
     console.error(error);
@@ -46,4 +33,28 @@ export default async function MapPage({
       </div>
     );
   }
+}
+
+export default function MapPage({
+  searchParams,
+}: {
+  searchParams: { search_query: string };
+}) {
+  const { search_query } = searchParams;
+
+  if (!search_query) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-black text-red-500">
+        <p>No location provided</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex h-screen flex-col items-center justify-center bg-gray-300 dark:bg-black">
+      <Suspense fallback={<div>Loading map...</div>}>
+        <MapContent searchQuery={search_query} />
+      </Suspense>
+    </div>
+  );
 }

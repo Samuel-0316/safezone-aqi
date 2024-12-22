@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 import {
@@ -41,37 +41,46 @@ const PopupComponent: React.FC<PopupComponentProps> = ({ location }) => {
   const [aqi, setAqi] = useState<AirQualityResponse | null>(null);
   const [pollen, setPollen] = useState<PollenQualityResponse | null>(null);
   const [water, setWater] = useState<WaterQualityResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchData = useCallback(async () => {
+    if (isLoading || aqi) return;
+
+    try {
+      setIsLoading(true);
+      setError(null);
+      const [aqiData, pollenData, waterData] = await Promise.all([
+        getAirQuality(location.lat, location.lon),
+        getPollenResponse(location.lat, location.lon),
+        getWaterQuality(location.lat, location.lon),
+      ]);
+
+      setAqi(aqiData);
+      setPollen(pollenData);
+      setWater(waterData);
+    } catch (error) {
+      console.error("Failed to fetch data:", error);
+      setError("Failed to load environmental data. Please try again later.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [location.lat, location.lon, isLoading, aqi]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const [aqiData, pollenData, waterData] = await Promise.all([
-          getAirQuality(location.lat, location.lon),
-          getPollenResponse(location.lat, location.lon),
-          getWaterQuality(location.lat, location.lon),
-        ]);
-
-        setAqi(aqiData);
-        setPollen(pollenData);
-        setWater(waterData);
-      } catch (error) {
-        console.error("Failed to fetch data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchData();
-  }, [location.lat, location.lon]);
+  }, [fetchData]);
 
   if (isLoading) {
     return <Popup>Loading environmental data...</Popup>;
   }
 
+  if (error) {
+    return <Popup>{error}</Popup>;
+  }
+
   if (!aqi) {
-    return <Popup>Failed to load environmental data.</Popup>;
+    return <Popup>No environmental data available.</Popup>;
   }
 
   const availableTabs = [

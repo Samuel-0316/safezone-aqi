@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { Location } from "@/lib/osm/OSMTypes";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import PopupComponent from "./PopupComponent";
@@ -42,6 +42,14 @@ const MapComponent = ({
     });
   }, []);
 
+  const memoizedPopups = useMemo(() => {
+    return [currentLocation, ...landmarkArray].map((location, index) => (
+      <Marker key={index} position={[location.lat, location.lon]}>
+        <PopupComponent location={location} />
+      </Marker>
+    ));
+  }, [currentLocation, landmarkArray]);
+
   if (!leaflet) {
     return <div>Loading map...</div>;
   }
@@ -57,15 +65,7 @@ const MapComponent = ({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Marker position={[currentLocation.lat, currentLocation.lon]}>
-          <PopupComponent location={currentLocation} />
-        </Marker>
-
-        {landmarkArray.map((landmark, index) => (
-          <Marker key={index} position={[landmark.lat, landmark.lon]}>
-            <PopupComponent location={landmark} />
-          </Marker>
-        ))}
+        {memoizedPopups}
       </MapContainer>
     </div>
   );

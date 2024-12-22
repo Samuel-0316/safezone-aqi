@@ -18,7 +18,6 @@ export const getPollenResponse = async (
   if (!data) {
     throw new Error("No data found for the given coordinates");
   }
-  console.log(data);
   return data;
 };
 
