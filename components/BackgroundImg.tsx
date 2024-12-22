@@ -19,7 +19,9 @@ const BackgroundImg = ({
 
   if (!mounted) {
     return (
-      <div className="relative h-screen w-full bg-gray-900 p-2">{children}</div>
+      <div className="relative h-screen w-full bg-gray-900 p-4 sm:p-6 md:p-8">
+        {children}
+      </div>
     );
   }
 
@@ -28,16 +30,19 @@ const BackgroundImg = ({
     : "/plague-doc-white.png";
 
   return (
-    <div className="relative h-screen w-full p-2">
+    <div className="relative h-screen w-full p-4 sm:p-6 md:p-8">
       <Image
         src={bgImage}
         alt="Background"
         fill
         priority
-        className="object-cover"
+        className="object-cover object-center md:object-[center_top]"
         quality={100}
       />
-      <div className="relative z-10 text-gray-100">{children}</div>
+
+      <div className="relative z-10 text-sm text-gray-100 sm:text-base md:text-lg">
+        {children}
+      </div>
     </div>
   );
 };
