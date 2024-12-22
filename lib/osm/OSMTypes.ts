@@ -28,3 +28,9 @@ type Geometry = {
   type: string;
   coordinates: [number, number];
 };
+
+export type Location = {
+  lat: number;
+  lon: number;
+  display_name: string;
+};

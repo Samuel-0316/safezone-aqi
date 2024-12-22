@@ -1,4 +1,5 @@
 import { FeatureCollection } from "./landmarkTypes";
+import { Location } from "./OSMTypes";
 
 export const getLandMarks = async (
   latitude: number,
@@ -13,22 +14,18 @@ export const getLandMarks = async (
   return data;
 };
 
-type LandMark = {
-  name: string;
-  latitude: number;
-  longitude: number;
-};
-
 export const getLandMarkProximityArray = (
   featurescollection: FeatureCollection,
 ) => {
-  const proximityArray: LandMark[] = [];
+  const proximityArray: Location[] = [];
   for (const feature of featurescollection.features) {
-    proximityArray.push({
-      name: feature.properties.name,
-      latitude: feature.geometry.coordinates[1],
-      longitude: feature.geometry.coordinates[0],
-    });
+    const latlong = feature.geometry.coordinates;
+    const location: Location = {
+      lat: latlong[1],
+      lon: latlong[0],
+      display_name: feature.properties.name,
+    };
+    proximityArray.push(location);
   }
   return proximityArray;
 };
