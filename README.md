@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Safe Zone AQI
 
-## Getting Started
+Safe Zone AQI is an interactive application designed to provide users with detailed safety information about specific locations. Whether you're concerned about air quality, water safety, allergens, or pollen levels, Safe Zone AQI makes it easy to evaluate a location's safety and make informed decisions. This tool is particularly useful for travelers, health-conscious individuals, families, and anyone wanting to assess environmental risks in their surroundings.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. **Location-Based Safety Assessment**
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+   - Enter the location you want to analyze.
+   - A map displays the selected area.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+2. **Landmark Detection**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   - Automatically finds and marks nearby landmarks (parks, restaurants, etc.) on the map.
 
-## Learn More
+3. **Detailed Safety Metrics**
 
-To learn more about Next.js, take a look at the following resources:
+   - Click on a landmark to view its safety levels, such as:
+     - **Air Quality Index (AQI)**
+     - **Water Quality**
+     - **Pollen Levels**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. **Personalized Allergen Detection**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   - Enter your allergies (e.g., peanuts, dairy).
+   - The app identifies nearby restaurants or locations where those allergens might be present.
 
-## Deploy on Vercel
+5. **Interactive Map**
+   - Easy-to-use map interface for visualizing safety information at a glance.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Use Cases
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Travel Planning**
+
+   - Check air and water quality at your travel destination before you go.
+
+2. **Health Awareness**
+
+   - Avoid areas with high pollen levels or allergens if you have sensitivities.
+
+3. **Family Outings**
+
+   - Identify safe parks and restaurants for children or elderly family members.
+
+4. **Relocation Decisions**
+
+   - Evaluate neighborhoods for safety metrics before moving in.
+
+5. **Outdoor Activities**
+
+   - Find pollution-free areas for exercising or leisure activities.
+
+6. **Emergency Planning**
+   - Identify safe zones during environmental emergencies or pollution spikes.
+
+## How It Works
+
+1. **Input the Location**
+
+   - The user enters the location to analyze.
+
+2. **Interactive Map Display**
+
+   - The app generates a map and marks all nearby landmarks.
+
+3. **Safety Information**
+
+   - Click on a landmark to display detailed metrics like AQI, water quality, and more.
+
+4. **Allergen Detection**
+   - If the user provides allergy details, the app highlights locations (like restaurants) with potential allergen risks.
+
+## Tech Stack
+
+- **Frontend & Backend:** Next.js (Full-Stack React Framework)
+- **APIs:**
+  - To be added
